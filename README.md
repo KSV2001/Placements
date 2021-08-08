@@ -1,4 +1,4 @@
 # Placements
-All the projects in resume + some more!
+All the projects in my resume + some more!
 
 This file has all my projects done so far.
