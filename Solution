@@ -1,0 +1,350 @@
+/******************************************************************************
+
+                              Online C++ Compiler.
+               Code, Compile, Run and Debug C++ program online.
+Write your code in this editor and press "Run" button to compile and execute it.
+
+*******************************************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+struct Node
+{
+    int data;
+    struct Node* next = nullptr;
+    struct Node* down = nullptr;
+};
+
+class Matrix
+{
+public:
+    Node* head;
+    /* you can add differnt functions and varibles here if you want */
+};
+
+int main()
+{
+    //I. Create matrix fn
+    int m,n,val;
+    Matrix M;
+    Node head_node;
+    M.head = &head_node;
+    Node *curr_row, *curr_col;
+    curr_row = &head_node;
+    curr_col = &head_node;
+    cin>>m>>n; //m for rows, n for columns
+    
+    //First row
+    for(int c=1; c<n; c++)
+    {
+        cin >> val;
+        (*curr_col).data = val;
+        Node node;
+        (*curr_col).next = &node;
+        curr_col = &node;
+    }
+    cin>>val;
+    (*curr_col).data = val;
+    
+    Node node;
+    curr_col = &node;
+    Node *p;
+    
+    //Remaining (m-1) rows
+    for(int r=1; r<m;r++)
+    {
+        p= curr_col;
+        for(int c=1; c<n; c++)
+        {
+            (*curr_row).down = curr_col;
+            curr_row = (*curr_row).next;
+            cin >> val;
+            (*curr_col).data = val;
+            Node node;
+            (*curr_col).next = &node;
+            curr_col = &node;
+        }
+        cin>>val;
+        (*curr_col).data = val;
+        (*curr_row).down = curr_col;
+        curr_row = p;
+        
+        Node node;
+        curr_col = &node;
+    }
+    (*curr_row).down = nullptr;
+    
+    cout << m<<" "<<n<<endl;
+    
+    //II. printRowCol function
+    Node *p_next = M.head;
+    Node *p_down = M.head;
+    
+    for(int k=1; k<=m;k++)
+    {
+    for(int j=1; j<=n; j++)
+    {
+        cout << (*p_next).data <<" " ; 
+        p_next = (*p_next).next;
+    }
+    cout<<endl;
+    p_down = (*p_down).down;
+    p_next = p_down;
+    }
+    
+    //III. printColRow function
+    Node *p_next = M.head;
+    Node *p_down = M.head;
+    
+    for(int j=1; j<=n;j++)
+    {
+    for(int k=1; k<=m; k++)
+    {
+        cout << (*p_down).data <<" " ; 
+        p_down = (*p_down).down;
+    }
+    cout<<endl;
+    p_next = (*p_next).next;
+    p_down = p_next;
+    }
+    
+    
+    //IV. Insert row at index
+    int value;
+    int index;
+    cin >> "Enter index to insert row: ">> index;
+    Node node;
+    Node *curr_row, *curr_col;
+    curr_row = &node;
+    curr_col = &node;
+
+    for(int c=1; c<n; c++)
+    {
+        cin >> value;
+        (*curr_col).data = value;
+        Node node;
+        (*curr_col).next = &node;
+        curr_col = &node;
+    }
+    cin>>value;
+    (*curr_col).data = value;
+    
+    if(index==1)
+    {
+        Node *f = curr_row;
+        Node *v = M.head;
+        for(int l=1; l<=n; l++)
+        {
+            (*curr_row).down = v;
+            curr_row = (*curr_row).next;
+            v = (*v).next;
+        }
+        M.head = f;
+    }
+    
+    if(index == m+1)
+    {
+        Node *temp = M.head;
+        while((*temp).down)
+        {
+            temp = (*temp).down;
+        }
+        
+        for(int l=1; l<=n; l++)
+        {
+            (*temp).down = curr_row;
+            curr_row = (*curr_row).next;
+            temp = (*temp).next;
+        }
+    }
+    
+    if(index>1 && index<m+1)
+    {
+        Node *temp = M.head;
+        for(int y=1; y<index-1;y++)
+        {
+            temp = (*temp).down;
+        }
+        Node *temp2 = (*temp).down;
+        
+        for(int l=1; l<=n; l++)
+        {
+            (*temp).down = curr_row;
+            curr_row = (*curr_row).next;
+            temp = (*temp).next;
+        }
+        
+        for(int l=1; l<=n; l++)
+        {
+            (*curr_row).down = temp2;
+            curr_row = (*curr_row).next;
+            temp2 = (*temp2).next;
+        }
+    }
+    
+    //V. Insert column at index
+    int index;
+    cin>>"Enter index to insert column">>index;
+    int value;
+    Node node;
+    Node *curr_row, *curr_col;
+    curr_row = &node;
+    curr_col = &node;
+    
+    cin>>"Enter column values with spaces on next line ";
+
+    for(int r=1; r<m; r++)
+    {
+        cin >> value;
+        (*curr_row).data = value;
+        Node node;
+        (*curr_row).down = &node;
+        curr_row = &node;
+    }
+    cin>>value;
+    (*curr_row).data = value;
+    
+    if(index==1)
+    {
+        Node *f = curr_col;
+        Node *v = M.head;
+        for(int l=1; l<=m; l++)
+        {
+            (*curr_col).down = v;
+            curr_col = (*curr_col).down;
+            v = (*v).down;
+        }
+        M.head = f;
+    }
+    
+    if(index == n+1)
+    {
+        Node *temp = M.head;
+        while((*temp).next)
+        {
+            temp = (*temp).next;
+        }
+        
+        for(int l=1; l<=m; l++)
+        {
+            (*temp).next = curr_col;
+            curr_col = (*curr_col).down;
+            temp = (*temp).down;
+        }
+    }
+    
+    if(index>1 && index<n+1)
+    {
+        Node *temp = M.head;
+        for(int y=1; y<index-1;y++)
+        {
+            temp = (*temp).next;
+        }
+        Node *temp2 = (*temp).next;
+        
+        for(int l=1; l<=m; l++)
+        {
+            (*temp).next = curr_col;
+            curr_col = (*curr_col).down;
+            temp = (*temp).down;
+        }
+        
+        for(int l=1; l<=m; l++)
+        {
+            (*curr_col).next = temp2;
+            curr_col = (*curr_col).down;
+            temp2 = (*temp2).down;
+        }
+    }
+    
+    //VI. Deleting row
+    int index;
+    cin>>"Enter index to delete row: ">> index;
+    if(index == 1)
+    {
+        M.head = (*(M.head)).down;
+    }
+    
+    if(index == m)
+    {
+        Node *temp = M.head;
+        for(int h=1;h<m; h++ )
+        {
+            temp = (*temp).down;
+        }
+        
+        for(int h=1;h<=n; h++ )
+        {
+            (*temp).down = nullptr;
+            temp = (*temp).next;
+        }
+        
+    }
+    
+    if(1<index && index<m)
+    {
+        Node *temp = M.head;
+        for(int h=1;h<index-1; h++ )
+        {
+            temp = (*temp).down;
+        }
+        Node *temp2 = (*temp).down;
+        Node *temp3 = (*temp2).down;
+        
+        for(int h=1;h<=n; h++)
+        {
+            (*temp).down = temp3;
+            temp = (*temp).next;
+            temp3 = (*temp3).next;
+            (*temp2).down = nullptr;
+        }
+        
+    
+    //VII. Deleting column
+    int index;
+    
+    cin>>"Enter index to delete column: ">> index;
+    if(index == 1)
+    {
+        M.head = (*(M.head)).next;
+    }
+    
+    if(index == n)
+    {
+        Node *temp = M.head;
+        for(int h=1;h<n; h++ )
+        {
+            temp = (*temp).next;
+        }
+        
+        for(int h=1;h<=m; h++ )
+        {
+            (*temp).next= nullptr;
+            temp = (*temp).down;
+        }
+        
+    }
+    
+    if(1<index && index<n)
+    {
+        Node *temp = M.head;
+        for(int h=1;h<index-1; h++ )
+        {
+            temp = (*temp).next;
+        }
+        Node *temp2 = (*temp).next;
+        Node *temp3 = (*temp2).next;
+        
+        for(int h=1;h<=m; h++)
+        {
+            (*temp).next = temp3;
+            temp = (*temp).down;
+            temp3 = (*temp3).down;
+            (*temp2).next = nullptr;
+        }
+    }
+    
+    return 0;
+}
